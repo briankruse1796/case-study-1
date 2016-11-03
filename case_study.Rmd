@@ -1,0 +1,89 @@
+---
+title: "case study 1"
+author: "Brian Kruse"
+date: "November 3, 2016"
+output: html_document
+---
+The purpose of this case study is to download, tidy and merge 2012 gross domestic product and educational data into suitable format for conducting statistical analysis using the R Studio suite.  The results and steps of this case study are summaryized within this R markdown document.
+
+Step 1: Retrieve the respective data sets.
+  Load the Gross Domestic Product data for the 190 ranked countries in this data   
+  set:
+  https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv
+
+  Load the educational data from this data set:
+  https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{"/users/briankruse/desktop/ids/case study 1/data/get data.r"}
+```
+
+Step 2: Tidy the respective data sets.
+
+The first part of the code inspects the respective data sets starting with 
+GDP_Country.  This student uses the head tail and summary commands and visually inspects the results for corrections.
+
+Step 2A) Tidy the GDP_Country data set
+The summary command identifies four variables X.5-X.8 that contain no values 
+Physically listing the values of X.4 identifies that all of the values are blank except for 6 alpha characters that provide no usable value to the data set and are candidates for removal in the next step.
+
+The next command creates a new data frame TIDY_GDP_COUNTRY that contains
+only the first four columns of information.
+
+
+The next commands invoke the tidyr diplyr and countrycode for further changes to the GDP data
+
+The next command renames all GDP variables to 
+CountryCode, GDP.Rank=Gross, Long.Name, GDP.MillionsofDollars
+
+The next vector norank counts all values within the GDP.Rank variable that contain
+blanks.  This is followed by recreating the same TIDY3.GDP.COuntry data frame while excluding all rows that contan blanks within the GDP.Rank variable. Next, creating a TIDY4.GDP.COUNTRY vector was required for removing the last four rows of free form text was required to convert GDP.Rank to a numeric variable.  Now, the GDP.Rank variable is converted to a integer for the analysis.  The last manipulation of the GDP data consists of eliminating the commas from the GDP.MillionsofDollars variable and converting this same variable into an integer.
+
+Step 2b) The first tidying will consist of eliminating and records without Income.Group values.  Twenty four observations are removed within this step.
+The following data tidying was omitted due to the fact that it was not required for the requested ananlysis.
+
+EDSTATA national.accounts base year as character and
+national.accounts refernce year as numeric
+system of national accounts unknown variable
+ppp.survey.year unknown variable
+
+```{"/users/briankruse/desktop/ids/case study 1/analysis/tidy_data.r"}
+```
+
+Step 3) Consists of the task of merging the two tidied data sets TIDY4_Country_GDP and EDSTATA into a data set called merged_data.  
+Question 1:
+The match data variable contains the 189 observation matches between the two tidied data sets.
+
+Question 2:
+The next command orders the merged_data set by GDP_Millions of dollars and the thirteen ranked county is KNA - St. Kitts and Nevis.  
+
+In order to identify the average GDP rank for High Income nonOECD and OECD countries, one creates vectors that identifies income group and identifies the mean for that vector as listed below:
+
+Question 3:
+1) High OECD GDP.Rank mean is 32.9667
+2) High nonOECD GDP.Rank mean is 91.91304
+
+
+```{"/users/briankruse/desktop/ids/case study 1/analysis/merged_data.r"}
+```
+
+
+Question 4:
+![Color Plot Income Group vs GDP](/users/briankruse/desktop/ids/case study 1/analysis/rplot.png)
+
+Question 5:
+GDP Ranking   | Income.               |
+Mean          | Group                 |
+------------- | ----------------------|
+91.91304      | High income: non OECD |
+32.9667       | High income: OECD     |
+133.7297      | Low income            |
+107.7037      | Low middle income     |
+92.13333      | Upper middle income   |
+
+There are 5 countries with a low middle income and have one of the top 38 GDP ranks
+
+Conclusion: Low income tends to have a GDP rank and income are positively correlated.
+The more income relates a higher GDP rank.
